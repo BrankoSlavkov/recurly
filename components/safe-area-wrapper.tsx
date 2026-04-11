@@ -1,6 +1,6 @@
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 import { type PropsWithChildren } from "react";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 import { cn } from "@/lib/cn";
 
