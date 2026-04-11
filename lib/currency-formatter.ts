@@ -8,6 +8,7 @@ export function formatCurrency(amount: number, currency = "USD"): string {
     }).format(amount);
   } catch (error) {
     console.error(error);
-    return `$${amount.toFixed(2)}`;
+    const safeAmount = Number.isFinite(amount) ? amount.toFixed(2) : "0.00";
+    return `${currency} ${safeAmount}`;
   }
 }
