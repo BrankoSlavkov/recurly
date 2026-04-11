@@ -2,10 +2,10 @@ import { Text } from "react-native";
 
 import SafeAreaWrapper from "@/components/safe-area-wrapper";
 
-export default function App() {
+export default function Insights() {
   return (
     <SafeAreaWrapper>
-      <Text>sadasdas</Text>
+      <Text>Insights</Text>
     </SafeAreaWrapper>
   );
 }

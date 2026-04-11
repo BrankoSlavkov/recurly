@@ -1,11 +1,11 @@
-import { Text } from "react-native";
-
 import SafeAreaWrapper from "@/components/safe-area-wrapper";
 
-export default function App() {
+import { Text } from "react-native";
+
+export default function Settings() {
   return (
     <SafeAreaWrapper>
-      <Text>sadasdas</Text>
+      <Text>Settings</Text>
     </SafeAreaWrapper>
   );
 }
