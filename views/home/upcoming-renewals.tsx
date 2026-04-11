@@ -16,7 +16,7 @@ export default function UpcomingRenewals() {
         renderItem={({ item }) => <UpcomingSubscriptionCard {...item} />}
         horizontal
         showsHorizontalScrollIndicator={false}
-        ListEmptyComponent={<HomeEmptyState />}
+        ListEmptyComponent={<HomeEmptyState message="No upcoming renewals yet." />}
       />
     </View>
   );

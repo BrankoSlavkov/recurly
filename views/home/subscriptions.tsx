@@ -30,7 +30,7 @@ export default function Subscriptions({ children }: PropsWithChildren) {
         extraData={expandedSubscription}
         ItemSeparatorComponent={() => <View className="h-4" />}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={<HomeEmptyState />}
+        ListEmptyComponent={<HomeEmptyState message="No subscriptions yet." />}
         contentContainerClassName="pb-20"
       />
     </View>
