@@ -24,7 +24,9 @@ export default function Subscriptions({ children }: PropsWithChildren) {
           <SubscriptionCard
             {...item}
             expanded={item.id === expandedSubscription}
-            onPress={() => setExpandedSubscription((current) => (current === item.id ? null : item.id))}
+            onPress={() => {
+              setExpandedSubscription((current) => (current === item.id ? null : item.id));
+            }}
           />
         )}
         extraData={expandedSubscription}
