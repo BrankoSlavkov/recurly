@@ -1,11 +1,12 @@
+import "@/app/index.css";
+
 import SafeAreaWrapper from "@/components/safe-area-wrapper";
+import Subscriptions from "@/views/home/subscriptions";
 
-import { Text } from "react-native";
-
-export default function Subscriptions() {
+export default function SubscriptionsTab() {
   return (
     <SafeAreaWrapper>
-      <Text>Subscriptions</Text>
+      <Subscriptions />
     </SafeAreaWrapper>
   );
 }

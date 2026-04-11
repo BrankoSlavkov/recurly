@@ -66,6 +66,7 @@ export default function SignUp() {
   /** Verification step uses local state — TanStack submit pipeline was no-op’ing (validation early-exit) with no feedback. */
   const [verificationCode, setVerificationCode] = useState("");
   const [verifyBusy, setVerifyBusy] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   /** Clerk only creates a session when `status === 'complete'`; `finalize()` fails otherwise (e.g. missing legal acceptance). */
   const [incompleteSignupHint, setIncompleteSignupHint] = useState<string | null>(null);
   const [postVerifyNeedsLegal, setPostVerifyNeedsLegal] = useState(false);
@@ -120,11 +121,34 @@ export default function SignUp() {
       if (__DEV__) {
         console.error("[sign-up:verify]", "unexpected error", err);
       }
-      throw err;
+      setIncompleteSignupHint("Something went wrong during verification. Please try again.");
     } finally {
       setVerifyBusy(false);
     }
   }, [finalizeCompletedSignUp, signUp, verificationCode, verificationEmail]);
+
+  const resendVerificationCode = useCallback(async () => {
+    setIncompleteSignupHint(null);
+    setIsResending(true);
+    try {
+      const { error } = await signUp.verifications.sendEmailCode();
+      if (error) {
+        setIncompleteSignupHint(
+          typeof error.message === "string" && error.message
+            ? error.message
+            : "Could not resend the code. Please try again.",
+        );
+        return;
+      }
+    } catch (err) {
+      if (__DEV__) {
+        console.error("[sign-up:resend]", "unexpected error", err);
+      }
+      setIncompleteSignupHint("Could not resend the code. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
+  }, [signUp]);
 
   const submitRecoveryUsername = useCallback(async () => {
     const u = validateUsername(recoveryUsername);
@@ -324,13 +348,15 @@ export default function SignUp() {
                   </Pressable>
 
                   <Pressable
-                    className="auth-secondary-button"
-                    disabled={fetchStatus === "fetching"}
-                    onPress={() => {
-                      void signUp.verifications.sendEmailCode();
-                    }}
+                    className={cn("auth-secondary-button", {
+                      "opacity-50": fetchStatus === "fetching" || isResending,
+                    })}
+                    disabled={fetchStatus === "fetching" || isResending}
+                    onPress={() => void resendVerificationCode()}
                   >
-                    <Text className="auth-secondary-button-text">Resend code</Text>
+                    <Text className="auth-secondary-button-text">
+                      {isResending ? "Sending…" : "Resend code"}
+                    </Text>
                   </Pressable>
                 </View>
               </View>

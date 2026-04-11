@@ -7,7 +7,7 @@ export function RootLayoutContent() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
 
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontsError] = useFonts({
     "sans-regular": require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
     "sans-bold": require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
     "sans-medium": require("../assets/fonts/PlusJakartaSans-Medium.ttf"),
@@ -17,13 +17,20 @@ export function RootLayoutContent() {
   });
 
   useEffect(() => {
-    if (fontsLoaded && authLoaded) {
-      SplashScreen.hideAsync();
+    if (fontsError) {
+      if (__DEV__) {
+        console.error("[root-layout:fonts]", fontsError);
+      }
+      void SplashScreen.hideAsync();
+      return;
     }
-  }, [fontsLoaded, authLoaded]);
+    if (fontsLoaded && authLoaded) {
+      void SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontsError, authLoaded]);
 
-  // Don't render app until both are ready
-  if (!fontsLoaded || !authLoaded) return null;
+  // Don't render until auth is ready and fonts either loaded or failed (avoid infinite splash on font error)
+  if ((!fontsLoaded && !fontsError) || !authLoaded) return null;
 
   // Without `app/index.tsx`, cold start can open `/(tabs)`; keep signed-out users on auth.
   if (!isSignedIn && segments[0] === "(tabs)") {

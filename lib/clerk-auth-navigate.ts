@@ -17,11 +17,11 @@ function normalizeClerkAppPath(url: string): string {
  * the same state linking would use for `href`, at the container root.
  */
 function resetRootToHref(href: string): void {
-  store.assertIsReady();
   const nav = store.navigationRef;
-  if (!nav.isReady()) {
+  if (!nav || !nav.isReady()) {
     return;
   }
+  store.assertIsReady();
   const state = store.getStateForHref(href as Href);
   if (state) {
     nav.resetRoot(state);
